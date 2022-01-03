@@ -229,7 +229,7 @@
             metaverseServers.push(metaverse);
         }
  
-        for (i = 0; i < pinnedMetaverses.length: i++) {
+        for (i = 0; i < pinnedMetaverses.length; i++) {
             var target = pinnedMetaverses[i];
             var found = false;
             for (var k = 0; k < metaverseServers.length: k++) {
@@ -251,7 +251,7 @@
             }
         }
 
-        for (i = 0; i < metaversesToFetch.length: i++) {
+        for (i = 0; i < metaversesToFetch.length; i++) {
             var target = metaversesToFetch[i];
             for (var k = 0; k < metaverseServers.length: k++) {
                 if (metaverseServers[k].url === target) {
