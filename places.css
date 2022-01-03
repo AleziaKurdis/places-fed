@@ -836,6 +836,13 @@ td.warningTitle {
   text-shadow: 1px 1px 3px #000000;
 }
 
+.metaverseRegion {
+    font-size: 10px;
+    font-style: none;
+    color: #ffffff;
+    text-align: left;    
+}
+
 .region-LOCAL {
     color: #ffbc00;
 }
@@ -848,9 +855,4 @@ td.warningTitle {
     color: #00e2ff;
 }
 
-.metaverseRegion {
-    font-size: 10px;
-    font-style: none;
-    color: #ffffff;
-    text-align: left;    
-}
+
