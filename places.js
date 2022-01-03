@@ -253,7 +253,7 @@
 
         for (i = 0; i < metaversesToFetch.length; i++) {
             var target = metaversesToFetch[i];
-            for (var k = 0; k < metaverseServers.length: k++) {
+            for (var k = 0; k < metaverseServers.length; k++) {
                 if (metaverseServers[k].url === target) {
                     metaverseServers[k].fetch = true;
                     break;
