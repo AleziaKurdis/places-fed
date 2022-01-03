@@ -383,7 +383,7 @@
                 "tags": "",
                 "managers": places[i].Owner,
                 "domain": "UNKNOWN (Beacon)",
-                "domainOrder": "ZZZZZZZZZZZZZUA"
+                "domainOrder": "ZZZZZZZZZZZZZUA",
                 "metaverseServer": "",
                 "metaverseRegion": "external"                
             };
