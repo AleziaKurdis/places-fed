@@ -232,7 +232,7 @@
         for (i = 0; i < pinnedMetaverses.length; i++) {
             var target = pinnedMetaverses[i];
             var found = false;
-            for (var k = 0; k < metaverseServers.length: k++) {
+            for (var k = 0; k < metaverseServers.length; k++) {
                 if (metaverseServers[k].url === target) {
                     metaverseServers[k].pinned = true;
                     found = true;
