@@ -827,3 +827,23 @@ td.warningTitle {
     color: #ffa200;
     text-align: left;
 }
+
+.placeTitle {
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 700;
+  text-decoration: none;
+  text-shadow: 1px 1px 3px #000000;
+}
+
+.region-LOCAL {
+    color: #ffbc00;
+}
+
+.region-FEDERATION {
+    color: #00ff58;
+}
+
+.region-EXTERNAL {
+    color: #00e2ff;
+}
