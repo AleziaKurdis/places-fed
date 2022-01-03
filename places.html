@@ -214,15 +214,15 @@
                         }
                         formattedMetaverseList = formattedMetaverseList + "    </tr>";
                         formattedMetaverseList = formattedMetaverseList + "</table>";
-/*
-                                    formattedMetaverseList = formattedMetaverseList + "<table class='placeTable'>";
-                                    formattedMetaverseList = formattedMetaverseList + "    <tr>";
-                                    formattedMetaverseList = formattedMetaverseList + "        <td width='2%'></td>";
-                                    formattedMetaverseList = formattedMetaverseList + "        <td align='left' width='88%' class='place-entry-description' onclick='teleport(" + '"' + placeRecords[i].id + '"' + ", " + '"' + placeRecords[i].address + '"' + "); return false;'>" + shortenedDescription + "</td>";
-                                    formattedMetaverseList = formattedMetaverseList + "        <td align='right' class='presenceOfLife-" + placeRecords[i].accessStatus + "'>&#9603;</td>";
-                                    formattedMetaverseList = formattedMetaverseList + "    </tr>";
-                                    formattedMetaverseList = formattedMetaverseList + "</table>";
-*/
+
+                        formattedMetaverseList = formattedMetaverseList + "<table class='placeTable'>";
+                        formattedMetaverseList = formattedMetaverseList + "    <tr>";
+                        formattedMetaverseList = formattedMetaverseList + "        <td width='2%'></td>";
+                        formattedMetaverseList = formattedMetaverseList + "        <td align='left' width='88%' class='metaverseRegion region-" + metaverseList[m].region.toUpperCase() + "'>" + metaverseList[m].region.toUpperCase() + "</td>";
+                                   // formattedMetaverseList = formattedMetaverseList + "        <td align='right' class='presenceOfLife-" + placeRecords[i].accessStatus + "'>&#9603;</td>";
+                        formattedMetaverseList = formattedMetaverseList + "    </tr>";
+                        formattedMetaverseList = formattedMetaverseList + "</table>";
+
                         formattedMetaverseList = formattedMetaverseList + "</div></div>";
 
                         metaverseCounter++;
@@ -413,7 +413,7 @@
                                         formatedList = formatedList + "<table class='placeTable'>";
                                         formatedList = formatedList + "    <tr>";
                                         formatedList = formatedList + "        <td width='2%'></td>";
-                                        formatedList = formatedList + "        <td align='left' width='88%' class='place-entry-description' onclick='teleport(" + '"' + placeRecords[i].id + '"' + ", " + '"' + placeRecords[i].address + '"' + "); return false;'>" + shortenedDescription + "</td>";
+                                        formatedList = formatedList + "        <td align='left' width='88%' class='place-entry-description' onclick='teleport(" + '"' + placeRecords[i].id + '"' + ", " + '"' + placeUrl + '"' + "); return false;'>" + shortenedDescription + "</td>";
                                         formatedList = formatedList + "        <td align='right' class='presenceOfLife-" + placeRecords[i].accessStatus + "'>&#9603;</td>";
                                         formatedList = formatedList + "    </tr>";
                                         formatedList = formatedList + "</table>";

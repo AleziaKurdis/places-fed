@@ -847,3 +847,11 @@ td.warningTitle {
 .region-EXTERNAL {
     color: #00e2ff;
 }
+
+.metaverseRegion {
+    font-size: 12px;
+    font-weight: 500;
+    font-style: none;
+    color: #ffffff;
+    text-align: left;    
+}
