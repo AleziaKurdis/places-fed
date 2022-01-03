@@ -28,6 +28,7 @@
             var placeList = [];
             var currentLocation = "";
             var warning = "";
+            var metaverseList = [];
 
             var lifeOnlyFilter = false;
             var maturityFilter = ["adult", "mature", "teen", "everyone", "unrated"];
@@ -85,6 +86,7 @@
                 <button title="Unrated" class='unratedFilterOn' id='maturityUnrated' onClick = 'filterMaturity("unrated");'>U</button>
             </div>
             <div id='tabs'>
+                <button id='listFormatMetaverse' class='tabBtn' onclick='displayTab("METAVERSE");' >Metaverse</button>
                 <button id='listFormatEvents' class='tabBtn' onclick='displayTab("EVENTS");' disabled>Explore</button>
                 <button id='listFormatDomains' class='tabBtn' onclick='displayTab("DOMAINS");'>By Domains</button>
             </div>
@@ -129,6 +131,7 @@
                     placeList = [];
                     placeList = message.data;
                     warning = message.warning;
+                    metaverseList = message.metaverseServers;
                     generateContent();
                 }
                 if (message.channel === channel && message.action === "CURRENT_LOCATION") {
@@ -177,197 +180,259 @@
             }
 
             function generateContent() {
-                var placeRecords = placeList.slice();
+                if (currentListFormat === "METAVERSE") {
+                    //Display metaverse page here
+                    
+                    var formattedMetaverseList = "";
+                    var metaverseCounter = 0;
+                    
+                    for (var m = 0; m < metaverseList.length; m++) {
+                        if (metaverseCounter === loadRecordsUpTo) {
+                            //Display Load More button
+                            formattedMetaverseList = formattedMetaverseList + "<div id='loadMore'><button id='loadMoreBtn' onClick='loadMore();'>LOAD MORE...</button></div>";
+                            break;
+                        }
 
-                if (currentListFormat === "DOMAINS") {
-                    placeRecords.sort(sortDomainsOrder);
-                }
-                
-                var currentDomain = "";
-                var counter = 0;
-                var formatedList = "";
-                
-                if (warning !== "") {
-                    formatedList = formatedList + "<div class='warningEntry'>";
-                    formatedList = formatedList + "<table class='warningTable'>";
-                    formatedList = formatedList + "<tr>";
-                    formatedList = formatedList + "<td width='5%'>&nbsp;</td>";
-                    formatedList = formatedList + "<td width='95%' valign='top' class='warningTitle'>" + warning + "</td>";
-                    formatedList = formatedList + "</tr>";
-                    formatedList = formatedList + "</table>";
-                    formatedList = formatedList + "</div>";                    
-                }
-                                
-                for (var i = 0; i < placeRecords.length; i++) {
-                    if (counter === loadRecordsUpTo) {
-                        //Display Load More button
-                        formatedList = formatedList + "<div id='loadMore'><button id='loadMoreBtn' onClick='loadMore();'>LOAD MORE...</button></div>";
-                        break;
+                        var regionStyle = "";
+                        if (metaverseList[m].order === "A") {
+                            regionStyle = " style='background-color: #574000;'";
+                        } else if (metaverseList[m].order === "F") {
+                            regionStyle = " style='background-color: #00571e;'";
+                        } else if (metaverseList[m].order === "Z") { 
+                            regionStyle = " style='background-color: #004d57;'";
+                        }
+
+                        formattedMetaverseList = formattedMetaverseList + "<div class = 'placeEntry' id='place-" + metaverseList[m].url + "'" + regionStyle + "><div class = 'blur'>";
+                        formattedMetaverseList = formattedMetaverseList + "<table class='placeTable'>";
+                        formattedMetaverseList = formattedMetaverseList + "    <tr valign = 'top'>";
+                        formattedMetaverseList = formattedMetaverseList + "        <td width='2%'></td>";                                
+                        formattedMetaverseList = formattedMetaverseList + "        <td align='left' width='75%' onclick='teleport(" + '"' + placeRecords[i].id + '"' + ", " + '"' + placeUrl + '"' + "); return false;'><a class= 'placeTitle' href='javascript:void(0)' onclick='teleport(" + '"' + placeRecords[i].id + '"' + ", " + '"' + placeRecords[i].address + '"' + "); return false;'>" + placeRecords[i].name + "</a></td>";
+                        if (!metaverseList[m].pinned) {
+                            formattedMetaverseList = formattedMetaverseList + "        <td align='right' ><span style='padding: 0%; cursor: pointer;' onclick='pinMetaverse(" + '"' + metaverseList[m].url + '"' + ")'><img src='icons/notpinned.png' width='26' height='26' draggable='false'></span></td>";
+                        } else {
+                            formattedMetaverseList = formattedMetaverseList + "        <td align='right' ><span style='padding: 0%; cursor: pointer;' onclick='unpinMetaverse(" + '"' + metaverseList[m].url + '"' + ")'><img src='icons/pinned.png' width='26' height='26' draggable='false'></span></td>";                        
+                        }
+                        formattedMetaverseList = formattedMetaverseList + "    </tr>";
+                        formattedMetaverseList = formattedMetaverseList + "</table>";
+/*
+                                    formattedMetaverseList = formattedMetaverseList + "<table class='placeTable'>";
+                                    formattedMetaverseList = formattedMetaverseList + "    <tr>";
+                                    formattedMetaverseList = formattedMetaverseList + "        <td width='2%'></td>";
+                                    formattedMetaverseList = formattedMetaverseList + "        <td align='left' width='88%' class='place-entry-description' onclick='teleport(" + '"' + placeRecords[i].id + '"' + ", " + '"' + placeRecords[i].address + '"' + "); return false;'>" + shortenedDescription + "</td>";
+                                    formattedMetaverseList = formattedMetaverseList + "        <td align='right' class='presenceOfLife-" + placeRecords[i].accessStatus + "'>&#9603;</td>";
+                                    formattedMetaverseList = formattedMetaverseList + "    </tr>";
+                                    formattedMetaverseList = formattedMetaverseList + "</table>";
+*/
+                        formattedMetaverseList = formattedMetaverseList + "</div></div>";
+
+                        metaverseCounter++;
                     }
                     
-
-                    /*
-                    Here's where you generate the list.
-                    This is the data that you can use to build each portal:
+                    document.getElementById("list_content").innerHTML = formattedMetaverseList;
                     
-                        placeRecords[i].order
-                            //String (Just a sequence used to establish the current ordering. 
-                            //No expected to be use, the list is already sorted based on it for you when the page get the data.)
-                        
-                        placeRecords[i].category
-                            //STRING (Possible Values: 
-                                //"A" = Attraction (places that have a thumbnail to attact trafic)
-                                //"Z" = Other (places that have no tumbnail to not attract trafic, since it's not an attraction.)
-                                //"Z" = Utilitary things like localhost
-                                //The ordering is already sorting the event in top of the list.
-                                //You could also have checked if the thumbnail exist or not.
-                                
-                        placeRecords[i].accessStatus
-                            //String (Possible values: FULL/LIFE/NOBODY 
-                            //This indicate if there are presence of people or not, and if the domain is full capacity.
-                            //This will be used to display "Life" indicator (green) or "Full" (red)
-                            
-                        placeRecords[i].name
-                            //String (This is the name of the Place. We might want a keyword filter based on this content)
-                            
-                        placeRecords[i].description
-                            //String (This is the description of the Place. We might want a keyword filter based on this content)
-                            //To display in a place detail tab?
-                            
-                        placeRecords[i].thumbnail
-                            String (This is the url of the place picture)
-                            
-                        placeRecords[i].maturity
-                             String | "unrated", "adult", "mature", "teen", "everyone" (we might want a filter based on that)
-                             
-                        placeRecords[i].address
-                            String (This is the hifi url of the place. To make a teleporter link, use the function teleport(placeID, address))
-                            
-                        placeRecords[i].current_attendance
-                            Number (The number of people currently in the Domain. domain.num_users)
-                            
-                        placeRecords[i].id
-                            String (This is the place ID, this can be used for any external storage)
-                            
-                        placeRecords[i].visibility
-                            String | 'open', 'friends', 'connections', 'private' 
-                            (for now only "open" are return by the api, so nothing to do with this. 
-                            Eventually, if we could have something to know if Annonymous are allowed, 
-                            we could disply but lock the place where anonymous are not welcome, if the connected user is anonnymous. 
-                            So they might see an interest to get an account.)
-                            
-                        placeRecords[i].capacity
-                            Number (Would be the max number of user allowed in the targetted domain.)
+                    var metaversePageInfo = " nodes";
+                    if (metaverseCounter <= 1) {
+                        metaversePageInfo = " node";
+                    }
+                    document.getElementById("listInfo").innerHTML = metaverseCounter + metaversePageInfo + " of " + metaverseList.length + ".";
+                } else {
+                    var placeRecords = placeList.slice();
 
-                        placeRecords[i].tags
-                            String: Preformated list of tags
-                            
-                        placeRecords[i].managers
-                            String: Preformated list of owners
-                            
-                        placeRecords[i].domain
-                            String: Name of the domain where the place is.
-                            
-                            
-                        placeRecords[i].domainOrder
-                            String: (Just a sequence used to establish the "per Domain" list).
-                    
-                    */
-                    var searchedText = document.getElementById("search").value;
-                    if (searchedText !== "") {
-                        displaySearchFieldsFilter();
-                        document.getElementById("searchFiltersBar").style.display = "inline-block";
-                    } else {
-                        document.getElementById("searchFiltersBar").style.display = "none";
+                    if (currentListFormat === "DOMAINS") {
+                        placeRecords.sort(sortDomainsOrder);
                     }
                     
-                    var lowerCasePlaceName = placeRecords[i].name.toLowerCase();
-                    var lowerCasePlaceDescription = placeRecords[i].description.toLowerCase();
-                    var lowerCasePlaceManagers = placeRecords[i].managers.toLowerCase();
-                    var lowerCasePlaceTags = placeRecords[i].tags.toLowerCase();
-                    if ((lifeOnlyFilter && placeRecords[i].accessStatus !== "NOBODY") || !lifeOnlyFilter) { 
-                        if ( maturityFilter.indexOf(placeRecords[i].maturity) !== -1){
-                            if ((lowerCasePlaceName.indexOf(searchedText.toLowerCase()) !== -1 && seachedFieldsFilter.indexOf("name") !== -1) ||
-                                (lowerCasePlaceDescription.indexOf(searchedText.toLowerCase()) !== -1 && seachedFieldsFilter.indexOf("description") !== -1) ||
-                                (lowerCasePlaceManagers.indexOf(searchedText.toLowerCase()) !== -1 && seachedFieldsFilter.indexOf("owners") !== -1) ||
-                                (lowerCasePlaceTags.indexOf(searchedText.toLowerCase()) !== -1 && seachedFieldsFilter.indexOf("tags") !== -1) ) { 
-                                
-                                if (currentListFormat === "DOMAINS" && currentDomain !== placeRecords[i].domain) {
+                    var currentDomain = "";
+                    var counter = 0;
+                    var formatedList = "";
+                    
+                    if (warning !== "") {
+                        formatedList = formatedList + "<div class='warningEntry'>";
+                        formatedList = formatedList + "<table class='warningTable'>";
+                        formatedList = formatedList + "<tr>";
+                        formatedList = formatedList + "<td width='5%'>&nbsp;</td>";
+                        formatedList = formatedList + "<td width='95%' valign='top' class='warningTitle'>" + warning + "</td>";
+                        formatedList = formatedList + "</tr>";
+                        formatedList = formatedList + "</table>";
+                        formatedList = formatedList + "</div>";                    
+                    }
                                     
-                                    var capacity = "?";
-                                    if (placeRecords[i].capacity !== 0) {
-                                        capacity = placeRecords[i].capacity;
+                    for (var i = 0; i < placeRecords.length; i++) {
+                        if (counter === loadRecordsUpTo) {
+                            //Display Load More button
+                            formatedList = formatedList + "<div id='loadMore'><button id='loadMoreBtn' onClick='loadMore();'>LOAD MORE...</button></div>";
+                            break;
+                        }
+                        
+
+                        /*
+                        Here's where you generate the list.
+                        This is the data that you can use to build each portal:
+                        
+                            placeRecords[i].order
+                                //String (Just a sequence used to establish the current ordering. 
+                                //No expected to be use, the list is already sorted based on it for you when the page get the data.)
+                            
+                            placeRecords[i].category
+                                //STRING (Possible Values: 
+                                    //"A" = Attraction (places that have a thumbnail to attact trafic)
+                                    //"Z" = Other (places that have no tumbnail to not attract trafic, since it's not an attraction.)
+                                    //"Z" = Utilitary things like localhost
+                                    //The ordering is already sorting the event in top of the list.
+                                    //You could also have checked if the thumbnail exist or not.
+                                    
+                            placeRecords[i].accessStatus
+                                //String (Possible values: FULL/LIFE/NOBODY 
+                                //This indicate if there are presence of people or not, and if the domain is full capacity.
+                                //This will be used to display "Life" indicator (green) or "Full" (red)
+                                
+                            placeRecords[i].name
+                                //String (This is the name of the Place. We might want a keyword filter based on this content)
+                                
+                            placeRecords[i].description
+                                //String (This is the description of the Place. We might want a keyword filter based on this content)
+                                //To display in a place detail tab?
+                                
+                            placeRecords[i].thumbnail
+                                String (This is the url of the place picture)
+                                
+                            placeRecords[i].maturity
+                                 String | "unrated", "adult", "mature", "teen", "everyone" (we might want a filter based on that)
+                                 
+                            placeRecords[i].address
+                                String (This is the hifi url of the place. To make a teleporter link, use the function teleport(placeID, address))
+                                
+                            placeRecords[i].current_attendance
+                                Number (The number of people currently in the Domain. domain.num_users)
+                                
+                            placeRecords[i].id
+                                String (This is the place ID, this can be used for any external storage)
+                                
+                            placeRecords[i].visibility
+                                String | 'open', 'friends', 'connections', 'private' 
+                                (for now only "open" are return by the api, so nothing to do with this. 
+                                Eventually, if we could have something to know if Annonymous are allowed, 
+                                we could disply but lock the place where anonymous are not welcome, if the connected user is anonnymous. 
+                                So they might see an interest to get an account.)
+                                
+                            placeRecords[i].capacity
+                                Number (Would be the max number of user allowed in the targetted domain.)
+
+                            placeRecords[i].tags
+                                String: Preformated list of tags
+                                
+                            placeRecords[i].managers
+                                String: Preformated list of owners
+                                
+                            placeRecords[i].domain
+                                String: Name of the domain where the place is.
+                                
+                            placeRecords[i].domainOrder
+                                String: (Just a sequence used to establish the "per Domain" list).
+                                
+                            placeRecords[i].metaverseServer
+                                String: Metaverse server identifier (base url)
+                                
+                            placeRecords[i].metaverseRegion
+                                String: metaverse server regionality: local, federation, external 
+                        
+                        */
+                        var searchedText = document.getElementById("search").value;
+                        if (searchedText !== "") {
+                            displaySearchFieldsFilter();
+                            document.getElementById("searchFiltersBar").style.display = "inline-block";
+                        } else {
+                            document.getElementById("searchFiltersBar").style.display = "none";
+                        }
+                        
+                        var lowerCasePlaceName = placeRecords[i].name.toLowerCase();
+                        var lowerCasePlaceDescription = placeRecords[i].description.toLowerCase();
+                        var lowerCasePlaceManagers = placeRecords[i].managers.toLowerCase();
+                        var lowerCasePlaceTags = placeRecords[i].tags.toLowerCase();
+                        if ((lifeOnlyFilter && placeRecords[i].accessStatus !== "NOBODY") || !lifeOnlyFilter) { 
+                            if ( maturityFilter.indexOf(placeRecords[i].maturity) !== -1){
+                                if ((lowerCasePlaceName.indexOf(searchedText.toLowerCase()) !== -1 && seachedFieldsFilter.indexOf("name") !== -1) ||
+                                    (lowerCasePlaceDescription.indexOf(searchedText.toLowerCase()) !== -1 && seachedFieldsFilter.indexOf("description") !== -1) ||
+                                    (lowerCasePlaceManagers.indexOf(searchedText.toLowerCase()) !== -1 && seachedFieldsFilter.indexOf("owners") !== -1) ||
+                                    (lowerCasePlaceTags.indexOf(searchedText.toLowerCase()) !== -1 && seachedFieldsFilter.indexOf("tags") !== -1) ) { 
+                                    
+                                    if (currentListFormat === "DOMAINS" && currentDomain !== placeRecords[i].domain) {
+                                        
+                                        var capacity = "?";
+                                        if (placeRecords[i].capacity !== 0) {
+                                            capacity = placeRecords[i].capacity;
+                                        }
+                                        
+                                        //display Domain section
+                                        formatedList = formatedList + "<div id='domainEntry' class='domainEntry'>";
+                                        formatedList = formatedList + "<table class='domainTable'>";
+                                        formatedList = formatedList + "<tr>";
+                                        formatedList = formatedList + "<td width='5%'>&nbsp;</td>";
+                                        formatedList = formatedList + "<td width='70%' valign='top' class='domainTitle'>" + placeRecords[i].domain + "</td>";
+                                        formatedList = formatedList + "<td width='25%' align='right' valign='top'><font class='domain-nbrUser " + placeRecords[i].accessStatus + "'><font class='domain-nbrUser_small'>USERS:</font> " + placeRecords[i].current_attendance + "</font>";
+                                        formatedList = formatedList + "<font class='domain-capacity'><br>CAPACITY: " + capacity + "</font></td>";
+                                        formatedList = formatedList + "</tr>";
+                                        formatedList = formatedList + "</table>";
+                                        formatedList = formatedList + "</div>";
+
+                                        currentDomain = placeRecords[i].domain;
                                     }
                                     
-                                    //display Domain section
-                                    formatedList = formatedList + "<div id='domainEntry' class='domainEntry'>";
-                                    formatedList = formatedList + "<table class='domainTable'>";
-                                    formatedList = formatedList + "<tr>";
-                                    formatedList = formatedList + "<td width='5%'>&nbsp;</td>";
-                                    formatedList = formatedList + "<td width='70%' valign='top' class='domainTitle'>" + placeRecords[i].domain + "</td>";
-                                    formatedList = formatedList + "<td width='25%' align='right' valign='top'><font class='domain-nbrUser " + placeRecords[i].accessStatus + "'><font class='domain-nbrUser_small'>USERS:</font> " + placeRecords[i].current_attendance + "</font>";
-                                    formatedList = formatedList + "<font class='domain-capacity'><br>CAPACITY: " + capacity + "</font></td>";
-                                    formatedList = formatedList + "</tr>";
-                                    formatedList = formatedList + "</table>";
-                                    formatedList = formatedList + "</div>";
-
-                                    currentDomain = placeRecords[i].domain;
-                                }
-                                
-                                var moreStyle = "";
-                                if (placeRecords[i].category === "A") {
-                                    moreStyle = " style='background-image: url(" + placeRecords[i].thumbnail + "); background-repeat: no-repeat; background-position: 50% 50%; background-size: cover;'";
-                                } else if (placeRecords[i].category === "Z") {
-                                    moreStyle = " style='background-color: #364a6e;'";
-                                } else if (placeRecords[i].category === "U") { //TO REMOVE ONCE BEACONS GET REMOVED
-                                    moreStyle = " style='background-color: #38130f;'";
-                                }
-                                
-                                var shortenedDescription = placeRecords[i].description.substr(0, 55);
-                                if (shortenedDescription.slice(-1) !== ".") {
-                                    shortenedDescription = shortenedDescription + "...";
-                                }
-                                
-                                var placeUrl = "hifi://" + placeRecords[i].name;
-                                if (placeRecords[i].category === "U") {  //TO REMOVE ONCE BEACONS GET REMOVED
-                                    placeUrl = placeRecords[i].address;
-                                }
-                                
-                                //Add the place to the list
-                                
-                                formatedList = formatedList + "<div class = 'placeEntry' id='place-" + placeRecords[i].id + "'" + moreStyle + "><div class = 'blur'>";
-                                formatedList = formatedList + "<table class='placeTable'>";
-                                formatedList = formatedList + "    <tr valign = 'top'>";
-                                formatedList = formatedList + "        <td width='2%'></td>";                                
-                                formatedList = formatedList + "        <td align='left' width='75%' onclick='teleport(" + '"' + placeRecords[i].id + '"' + ", " + '"' + placeUrl + '"' + "); return false;'><a class= 'placeTitle' href='javascript:void(0)' onclick='teleport(" + '"' + placeRecords[i].id + '"' + ", " + '"' + placeRecords[i].address + '"' + "); return false;'>" + placeRecords[i].name + "</a></td>";
-                                if (placeRecords[i].category !== "Z") {
-                                    formatedList = formatedList + "        <td align='right' ><span style='padding: 0%; cursor: pointer;' onclick='openDetail(" + '"' + placeRecords[i].id + '"' + ")'><img src='icons/info.png' width='26' height='26' draggable='false'></span></td>";
-                                }
-                                formatedList = formatedList + "    </tr>";
-                                formatedList = formatedList + "</table>";
-                                if (placeRecords[i].category !== "Z") {
+                                    var moreStyle = "";
+                                    if (placeRecords[i].category === "A") {
+                                        moreStyle = " style='background-image: url(" + placeRecords[i].thumbnail + "); background-repeat: no-repeat; background-position: 50% 50%; background-size: cover;'";
+                                    } else if (placeRecords[i].category === "Z") {
+                                        moreStyle = " style='background-color: #364a6e;'";
+                                    } else if (placeRecords[i].category === "U") { //TO REMOVE ONCE BEACONS GET REMOVED
+                                        moreStyle = " style='background-color: #38130f;'";
+                                    }
+                                    
+                                    var shortenedDescription = placeRecords[i].description.substr(0, 55);
+                                    if (shortenedDescription.slice(-1) !== ".") {
+                                        shortenedDescription = shortenedDescription + "...";
+                                    }
+                                    
+                                    var placeUrl = "hifi://" + placeRecords[i].name;
+                                    if (placeRecords[i].category === "U") {  //TO REMOVE ONCE BEACONS GET REMOVED
+                                        placeUrl = placeRecords[i].address;
+                                    }
+                                    
+                                    //Add the place to the list
+                                    
+                                    formatedList = formatedList + "<div class = 'placeEntry' id='place-" + placeRecords[i].id + "'" + moreStyle + "><div class = 'blur'>";
                                     formatedList = formatedList + "<table class='placeTable'>";
-                                    formatedList = formatedList + "    <tr>";
-                                    formatedList = formatedList + "        <td width='2%'></td>";
-                                    formatedList = formatedList + "        <td align='left' width='88%' class='place-entry-description' onclick='teleport(" + '"' + placeRecords[i].id + '"' + ", " + '"' + placeRecords[i].address + '"' + "); return false;'>" + shortenedDescription + "</td>";
-                                    formatedList = formatedList + "        <td align='right' class='presenceOfLife-" + placeRecords[i].accessStatus + "'>&#9603;</td>";
+                                    formatedList = formatedList + "    <tr valign = 'top'>";
+                                    formatedList = formatedList + "        <td width='2%'></td>";                                
+                                    formatedList = formatedList + "        <td align='left' width='75%' onclick='teleport(" + '"' + placeRecords[i].id + '"' + ", " + '"' + placeUrl + '"' + "); return false;'><a class= 'placeTitle' href='javascript:void(0)' onclick='teleport(" + '"' + placeRecords[i].id + '"' + ", " + '"' + placeRecords[i].address + '"' + "); return false;'>" + placeRecords[i].name + "</a></td>";
+                                    if (placeRecords[i].category !== "Z") {
+                                        formatedList = formatedList + "        <td align='right' ><span style='padding: 0%; cursor: pointer;' onclick='openDetail(" + '"' + placeRecords[i].id + '"' + ")'><img src='icons/info.png' width='26' height='26' draggable='false'></span></td>";
+                                    }
                                     formatedList = formatedList + "    </tr>";
                                     formatedList = formatedList + "</table>";
-                                }
-                                formatedList = formatedList + "</div></div>";
+                                    if (placeRecords[i].category !== "Z") {
+                                        formatedList = formatedList + "<table class='placeTable'>";
+                                        formatedList = formatedList + "    <tr>";
+                                        formatedList = formatedList + "        <td width='2%'></td>";
+                                        formatedList = formatedList + "        <td align='left' width='88%' class='place-entry-description' onclick='teleport(" + '"' + placeRecords[i].id + '"' + ", " + '"' + placeRecords[i].address + '"' + "); return false;'>" + shortenedDescription + "</td>";
+                                        formatedList = formatedList + "        <td align='right' class='presenceOfLife-" + placeRecords[i].accessStatus + "'>&#9603;</td>";
+                                        formatedList = formatedList + "    </tr>";
+                                        formatedList = formatedList + "</table>";
+                                    }
+                                    formatedList = formatedList + "</div></div>";
 
-                                counter++;
+                                    counter++;
+                                }
                             }
                         }
                     }
+                    document.getElementById("list_content").innerHTML = formatedList;
+                    
+                    var placeInfo = " places";
+                    if (counter <= 1) {
+                        placeInfo = " place";
+                    }
+                    document.getElementById("listInfo").innerHTML = counter + placeInfo + " of " + placeRecords.length + ".";
                 }
-                document.getElementById("list_content").innerHTML = formatedList;
-                
-                var placeInfo = " places";
-                if (counter <= 1) {
-                    placeInfo = " place";
-                }
-                document.getElementById("listInfo").innerHTML = counter + placeInfo + " of " + placeRecords.length + ".";
             }
             
             function loadMore() {
@@ -537,9 +602,15 @@
                 if (tab === "EVENTS") {
                     document.getElementById("listFormatEvents").disabled = true;
                     document.getElementById("listFormatDomains").disabled = false;
+                    document.getElementById("listFormatMetaverse").disabled = false;
                 } else if (tab === "DOMAINS") {
                     document.getElementById("listFormatEvents").disabled = false;
                     document.getElementById("listFormatDomains").disabled = true;
+                    document.getElementById("listFormatMetaverse").disabled = false;
+                } else if (tab === "METAVERSE") {
+                    document.getElementById("listFormatEvents").disabled = false;
+                    document.getElementById("listFormatDomains").disabled = false;
+                    document.getElementById("listFormatMetaverse").disabled = true;
                 }
             
                 loadRecordsUpTo = NUMBER_OF_RECORDS_PER_LOAD;

@@ -13,16 +13,11 @@
 (function() {
     var jsMainFileName = "places.js";
     var ROOT = Script.resolvePath('').split(jsMainFileName)[0];
-
-    var CURRENT_METAVERSE_SERVER = AccountServices.metaverseServerURL + "/api/v1/places";
-    
-    var dataSources = [
-            CURRENT_METAVERSE_SERVER
-        ];
-        
-    var metaverseServers = [];    
-        
-    
+       
+    var metaverseServers = [];
+    var SETTING_METAVERSE_TO_FETCH = "placesAppMetaverseToFetch";
+    var SETTING_PINNED_METAVERSE = "placesAppPinnedMetaverse";
+         
     var httpRequest = null;
     var placesData;
     var portalList = [];
@@ -143,15 +138,17 @@
         nbrPlaceProtocolKnown = 0;
         var extractedData;
         
-        for (var i = 0; i < dataSources.length; i++ ) {
-            extractedData = getContent(dataSources[i] + "?status=online" + "&acash=" + Math.floor(Math.random() * 999999));
-            try {
-                placesData = JSON.parse(extractedData);
-            } catch(e) {
-                placesData = {};
-            }        
-            httpRequest = null; 
-            processData();
+        for (var i = 0; i < metaverseServers.length; i++ ) {
+            if (metaverseServers[i].fetch === true) {
+                extractedData = getContent(metaverseServers[i].url + "/api/v1/places?status=online" + "&acash=" + Math.floor(Math.random() * 999999));
+                try {
+                    placesData = JSON.parse(extractedData);
+                } catch(e) {
+                    placesData = {};
+                }        
+                httpRequest = null; 
+                processData(metaverseServers[i]);
+            }
         }
 
         //################### TO REMOVED ONCE NO MORE USED #####################
@@ -173,7 +170,8 @@
             "channel": channel,
             "action": "PLACE_DATA",
             "data": portalList,
-            "warning": warning
+            "warning": warning,
+            "metaverseServers": metaverseServers
         };
 
         tablet.emitScriptEvent(message);
@@ -182,21 +180,88 @@
 
     function buildMetaverseServerList () {
 
-        //get federation list
-        
         //var fedDirectoryUrl = AccountServices.metaverseServerURL + "/federation.json"; //adjust if this is developped
         var fedDirectoryUrl = ROOT + "federation.json";
         
-        var extractedFedData = getContent(fedDirectoryUrl);
-        print("FEDERATION: " + JSON.stringify(extractedFedData));
+        var pinnedMetaverses = Settings.getValue(SETTING_PINNED_METAVERSE, []);
+        var metaversesToFetch = Settings.getValue(SETTING_METAVERSE_TO_FETCH, []);
         
-        //mark the connected as local, and as fetching
-        
-        //add the pinned if some to add
-        
-        //marked fetched as fetching
+        var extractedFedData = getContent(fedDirectoryUrl);        
+        var federation = [];
+        try {
+            federation = JSON.parse(extractedFedData);
+        } catch(e) {
+            federation = [];
+        }        
+        var currentFound = false;
+        var region, pinned, fetch, order, metaverse;
+        for (var i=0; i < federation.length; i++) {
+            if (federation[i].node === AccountServices.metaverseServerURL) {
+                region = "local";
+                order = "A";
+                fetch = true;
+                pinned = true;                
+                currentFound = true;                
+            } else {
+                region = "federation";
+                order = "F";
+                fetch = false;
+                pinned = false;
+            }
+            
+            metaverse = {
+                "url": federation[i].node,
+                "region": region,
+                "fetch": fetch,
+                "pinned": pinned,
+                "order": order
+            };
+            metaverseServers.push(metaverse);
+        }
+        if (!currentFound) {
+            metaverse = {
+                "url": AccountServices.metaverseServerURL,
+                "region": "local",
+                "fetch": true,
+                "pinned": true,
+                "order": "A"
+            };
+            metaverseServers.push(metaverse);
+        }
+ 
+        for (i = 0; i < pinnedMetaverses.length: i++) {
+            var target = pinnedMetaverses[i];
+            var found = false;
+            for (var k = 0; k < metaverseServers.length: k++) {
+                if (metaverseServers[k].url === target) {
+                    metaverseServers[k].pinned = true;
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                metaverse = {
+                    "url": target,
+                    "region": "external",
+                    "fetch": false,
+                    "pinned": true,
+                    "order": "Z"
+                };
+                metaverseServers.push(metaverse);                
+            }
+        }
 
+        for (i = 0; i < metaversesToFetch.length: i++) {
+            var target = metaversesToFetch[i];
+            for (var k = 0; k < metaverseServers.length: k++) {
+                if (metaverseServers[k].url === target) {
+                    metaverseServers[k].fetch = true;
+                    break;
+                }
+            }
+        }
         
+        metaverseServers.sort(sortOrder);
     }
 
     function getContent(url) {
@@ -206,19 +271,20 @@
         return httpRequest.responseText;
     }
 
-    function processData(){
+    function processData(metaverseInfo){
         var supportedProtocole = Window.protocolSignature();
-   
+
         var places = placesData.data.places;
         for (var i = 0;i < places.length; i++) {
 
-            var category, accessStatus, eventTypeDescription;
+            var region, category, accessStatus, eventTypeDescription;
             
             var description = (places[i].description ? places[i].description : "");
             var thumbnail = (places[i].thumbnail ? places[i].thumbnail : "");
 
             if ( places[i].domain.protocol_version === supportedProtocole ) {
                   
+                    region = metaverseInfo.order;
 
                     if ( thumbnail.substr(0, 4).toLocaleLowerCase() !== "http") {
                         category = "O"; //Other
@@ -237,7 +303,7 @@
                     }                 
 
                     var portal = {
-                        "order": category + "_" + getSeededRandomForString(places[i].id),
+                        "order": category + "_" + region + "_" + getSeededRandomForString(places[i].id),
                         "category": category,
                         "accessStatus": accessStatus,
                         "name": places[i].name,
@@ -252,7 +318,9 @@
                         "tags": getListFromArray(places[i].tags),
                         "managers": getListFromArray(places[i].managers),
                         "domain": places[i].domain.name,
-                        "domainOrder": aplphabetize(zeroPad(places[i].domain.num_users, 6)) + "_" + places[i].domain.name + "_" + places[i].name
+                        "domainOrder": aplphabetize(zeroPad(places[i].domain.num_users, 6)) + "_" + places[i].domain.name + "_" + places[i].name,
+                        "metaverseServer": metaverseInfo.url,
+                        "metaverseRegion": metaverseInfo.region
                     };
                     portalList.push(portal);
 
@@ -300,7 +368,7 @@
             
 
             var portal = {
-                "order": category + "_" + getSeededRandomForString(places[i]["Domain Name"]),
+                "order": category + "_Z_" + getSeededRandomForString(places[i]["Domain Name"]),
                 "category": category,
                 "accessStatus": accessStatus,
                 "name": shortenName,
@@ -316,6 +384,8 @@
                 "managers": places[i].Owner,
                 "domain": "UNKNOWN (Beacon)",
                 "domainOrder": "ZZZZZZZZZZZZZUA"
+                "metaverseServer": "",
+                "metaverseRegion": "external"                
             };
             portalList.push(portal);
         }
@@ -324,7 +394,7 @@
 
     function addUtilityPortals() {
         var localHostPortal = {
-            "order": "Z_AAAAAA",
+            "order": "Z_Z_AAAAAA",
             "category": "Z",
             "accessStatus": "NOBODY",
             "name": "localhost",
@@ -339,12 +409,14 @@
             "tags": "",
             "managers": "",
             "domain": "",
-            "domainOrder": "ZZZZZZZZZZZZZZA"
+            "domainOrder": "ZZZZZZZZZZZZZZA",
+            "metaverseServer": "",
+            "metaverseRegion": "local"
         };
         portalList.push(localHostPortal);
 
         var tutorialPortal = {
-            "order": "Z_AAAAAZ",
+            "order": "Z_Z_AAAAAZ",
             "category": "Z",
             "accessStatus": "NOBODY",
             "name": "tutorial",
@@ -359,7 +431,9 @@
             "tags": "",
             "managers": "",
             "domain": "",
-            "domainOrder": "ZZZZZZZZZZZZZZZ"
+            "domainOrder": "ZZZZZZZZZZZZZZZ",
+            "metaverseServer": "",
+            "metaverseRegion": "local"            
         };
         portalList.push(tutorialPortal);
         
