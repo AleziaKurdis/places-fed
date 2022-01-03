@@ -200,7 +200,7 @@
                 region = "local";
                 order = "A";
                 fetch = true;
-                pinned = true;                
+                pinned = false;                
                 currentFound = true;                
             } else {
                 region = "federation";
@@ -223,7 +223,7 @@
                 "url": AccountServices.metaverseServerURL,
                 "region": "local",
                 "fetch": true,
-                "pinned": true,
+                "pinned": false,
                 "order": "A"
             };
             metaverseServers.push(metaverse);
