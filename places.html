@@ -400,6 +400,10 @@
                                     if (placeRecords[i].category === "U") {  //TO REMOVE ONCE BEACONS GET REMOVED
                                         placeUrl = placeRecords[i].address;
                                     }
+                                    if (placeRecords[i].metaverseRegion !== "local") {
+                                        placeUrl = "hifi://" + placeRecords[i].address;
+                                        alert(placeUrl);
+                                    }
                                     
                                     //Add the place to the list
                                     
@@ -667,7 +671,9 @@
                 if (placeDetail.category === "U") {  //TO REMOVE ONCE BEACONS GET REMOVED
                     placeUrl = placeDetail.address;
                 }
-                
+                if (placeDetail.metaverseRegion !== "local") {
+                    placeUrl = "hifi://" + placeRecords[i].address;
+                }                
                 document.getElementById("placeDetail-visitBtn-container").innerHTML = "<button id='placeDetail-visitBtn' onclick='teleport(" + '"' + placeDetail.id + '"' + ", " + '"' + placeUrl + '"' + "); return false;'>Visit</button>";
                 document.getElementById("placeDetail-maturity").innerHTML = placeDetail.maturity.toUpperCase();
                 document.getElementById("placeDetail-maturity").className = placeDetail.maturity + "FilterOn placeMaturity";
