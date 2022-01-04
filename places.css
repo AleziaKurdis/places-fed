@@ -862,4 +862,28 @@ td.warningTitle {
     color: #00e2ff;
 }
 
+.filterLocalOff {
+  background: #333333;
+  color: #888888;
+  font-size: 10px;
+  padding: 1px 2px 1px 2px;
+  border: solid #000000 1px;
+  text-decoration: none;
+}
 
+button.filterLocalOff:hover {
+    border: solid #888888 1px;
+}
+
+.localFilterOn {
+  background: #ad8000;
+  color: #ffbc00;
+  font-size: 10px;
+  padding: 1px 2px 1px 2px;
+  border: solid #000000 1px;
+  text-decoration: none;  
+}
+
+button.localFilterOn:hover {
+    border: solid #ffbc00 1px;
+}
