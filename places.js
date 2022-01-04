@@ -44,7 +44,7 @@
     });
     
     var timestamp = 0;
-    var INTERCALL_DELAY = 400; //0.4 sec
+    var INTERCALL_DELAY = 300; //0.3 sec
     var PERSISTENCE_ORDERING_CYCLE = 5 * 24 * 3600 * 1000; //5 days
     
     function clicked(){
