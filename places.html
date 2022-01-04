@@ -399,8 +399,7 @@
                                     var placeUrl = "hifi://" + placeRecords[i].name;
                                     if (placeRecords[i].category === "U") {  //TO REMOVE ONCE BEACONS GET REMOVED
                                         placeUrl = placeRecords[i].address;
-                                    }
-                                    if (placeRecords[i].metaverseRegion !== "local") {
+                                    } else if (placeRecords[i].metaverseRegion !== "local") {
                                         placeUrl = "hifi://" + placeRecords[i].address;
                                         alert(placeUrl);
                                     }
@@ -670,8 +669,7 @@
                 var placeUrl = "hifi://" + placeDetail.name;
                 if (placeDetail.category === "U") {  //TO REMOVE ONCE BEACONS GET REMOVED
                     placeUrl = placeDetail.address;
-                }
-                if (placeDetail.metaverseRegion !== "local") {
+                } else if (placeDetail.metaverseRegion !== "local") {
                     placeUrl = "hifi://" + placeRecords[i].address;
                 }                
                 document.getElementById("placeDetail-visitBtn-container").innerHTML = "<button id='placeDetail-visitBtn' onclick='teleport(" + '"' + placeDetail.id + '"' + ", " + '"' + placeUrl + '"' + "); return false;'>Visit</button>";
