@@ -212,7 +212,7 @@
     function buildMetaverseServerList () {
 
         //var fedDirectoryUrl = AccountServices.metaverseServerURL + "/federation.json"; //adjust if this is developped
-        var fedDirectoryUrl = ROOT + "federation.json";
+        var fedDirectoryUrl = ROOT + "federation.json" + "?version=" + Math.floor(Math.random() * 999999);
         
         var pinnedMetaverses = Settings.getValue(SETTING_PINNED_METAVERSE, []);
         var metaversesToFetch = Settings.getValue(SETTING_METAVERSE_TO_FETCH, []);
