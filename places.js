@@ -174,11 +174,11 @@
                 extractedData = getContent(metaverseServers[i].url + "/api/v1/places?status=online" + "&acash=" + Math.floor(Math.random() * 999999));
                 try {
                     placesData = JSON.parse(extractedData);
+                    processData(metaverseServers[i]);
                 } catch(e) {
                     placesData = {};
                 }
-                httpRequest = null; 
-                processData(metaverseServers[i]);
+                httpRequest = null;
             }
         }
 
