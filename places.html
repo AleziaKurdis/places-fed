@@ -118,6 +118,9 @@
                                 <br><br>
                                 <div id="placeDetail-capacity"></div>
                                 <br><br>
+                                METAVERSE:
+                                <div id="placeDetail-metaverse"></div>
+                                <div id="placeDetail-region"></div>
                             </div>
                         </td>
                     </tr>
@@ -684,6 +687,8 @@
                     capacity = placeDetail.capacity;
                 }
                 document.getElementById("placeDetail-capacity").innerHTML = "CAPACITY: <b>" + capacity + "</b>";
+                document.getElementById("placeDetail-metaverse").innerHTML = placeDetail.metaverseServer;
+                document.getElementById("placeDetail-region").innerHTML = "<font class='region-" + placeDetail.metaverseRegion.toUpperCase() + "'>" + placeDetail.metaverseRegion.toUpperCase() + "</font>";
   
                 document.getElementById("placeDetail").style.width = "100%";
             }
