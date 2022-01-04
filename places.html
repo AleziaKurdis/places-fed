@@ -221,7 +221,7 @@
                         if (!metaverseList[m].fetch) {
                             formattedMetaverseList = formattedMetaverseList + "        <td align='left' width='50%'><span style='padding: 0%; cursor: pointer;' onclick='fetchMetaverse(" + m + ", true);'><img src='icons/notfetched.png' width='40' height='16' draggable='false'></span></td>";
                         } else {
-                            formattedMetaverseList = formattedMetaverseList + "        <td align='left' width='50%'><span style='padding: 0%; cursor: pointer;' onclick='fetchMetaverse(" + m + ", false);'><img src='icons/fetched.png' width='40' height='16' draggable='false'></span><font class='metaverseRegion region-" + metaverseList[m].region.toUpperCase() + "'> LOADED</font></td>";                        
+                            formattedMetaverseList = formattedMetaverseList + "        <td align='left' width='50%'><span style='padding: 0%; cursor: pointer;' onclick='fetchMetaverse(" + m + ", false);'><img src='icons/fetched.png' width='40' height='16' draggable='false'></span></td>";                        
                         }                        
                         formattedMetaverseList = formattedMetaverseList + "        <td align='right' width='50%' ><font class='metaverseRegion region-" + metaverseList[m].region.toUpperCase() + "'>" + metaverseList[m].region.toUpperCase() + "</font></td>";
                         formattedMetaverseList = formattedMetaverseList + "    </tr>";
