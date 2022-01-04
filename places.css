@@ -764,6 +764,13 @@ font.domain-nbrUser_small {
     width: 100%;   
 }
 
+#placeDetail-metaverse {
+    font-size: 10px;
+    font-weight: 500;
+    color: #cccccc;
+    width: 100%;
+}
+
 .fieldsSearchFilterOn {
   background: #0085b5;
   color: #00bbff;
