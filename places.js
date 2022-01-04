@@ -97,8 +97,39 @@
                 location.goBack();
             } else if (messageObj.action === "GO_FORWARD" && (n - timestamp) > INTERCALL_DELAY) {
                 location.goForward();
+            } else if (messageObj.action === "PIN_META" && (n - timestamp) > INTERCALL_DELAY) {
+                d = new Date();
+                timestamp = d.getTime();
+                metaverseServers[messageObj.metaverseIndex].pinned = messageObj.value;
+                savePinnedMetaverseSetting();
+            } else if (messageObj.action === "FETCH_META" && (n - timestamp) > INTERCALL_DELAY) {
+                d = new Date();
+                timestamp = d.getTime();
+                metaverseServers[messageObj.metaverseIndex].fetch = messageObj.value;
+                saveMetaverseToFetchSetting();                
+                
             }
         }
+    }
+
+    function savePinnedMetaverseSetting() {
+        var pinnedServers = [];
+        for (var q = 0; q < metaverseServers.length; q++) {
+            if (metaverseServers[q].pinned) {
+                pinnedServers.push(metaverseServers[q].url);
+            }
+        }
+        Settings.setValue(SETTING_PINNED_METAVERSE, pinnedServers);
+    }
+
+    function saveMetaverseToFetchSetting() {
+        var fetchedServers = [];
+        for (var q = 0; q < metaverseServers.length; q++) {
+            if (metaverseServers[q].fetch) {
+                fetchedServers.push(metaverseServers[q].url);
+            }
+        }
+        Settings.setValue(SETTING_METAVERSE_TO_FETCH, fetchedServers);        
     }
 
     function onHostChanged(host) {
@@ -145,7 +176,7 @@
                     placesData = JSON.parse(extractedData);
                 } catch(e) {
                     placesData = {};
-                }        
+                }
                 httpRequest = null; 
                 processData(metaverseServers[i]);
             }

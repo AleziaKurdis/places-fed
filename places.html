@@ -208,9 +208,9 @@
                         formattedMetaverseList = formattedMetaverseList + "        <td width='2%'></td>";                                
                         formattedMetaverseList = formattedMetaverseList + "        <td align='left' width='75%' ><font class= 'metaverseTitle region-" + metaverseList[m].region.toUpperCase() + "' >" + metaverseList[m].url + "</font></td>";
                         if (!metaverseList[m].pinned) {
-                            formattedMetaverseList = formattedMetaverseList + "        <td align='right' ><span style='padding: 0%; cursor: pointer;' onclick='pinMetaverse(" + '"' + metaverseList[m].url + '"' + ")'><img src='icons/notpinned.png' width='26' height='26' draggable='false'></span></td>";
+                            formattedMetaverseList = formattedMetaverseList + "        <td align='right' ><span style='padding: 0%; cursor: pointer;' onclick='pinMetaverse(" + m + ", true);'><img src='icons/notpinned.png' width='26' height='26' draggable='false'></span></td>";
                         } else {
-                            formattedMetaverseList = formattedMetaverseList + "        <td align='right' ><span style='padding: 0%; cursor: pointer;' onclick='unpinMetaverse(" + '"' + metaverseList[m].url + '"' + ")'><img src='icons/pinned.png' width='26' height='26' draggable='false'></span></td>";                        
+                            formattedMetaverseList = formattedMetaverseList + "        <td align='right' ><span style='padding: 0%; cursor: pointer;' onclick='pinMetaverse(" + m + ", false);'><img src='icons/pinned.png' width='26' height='26' draggable='false'></span></td>";                        
                         }
                         formattedMetaverseList = formattedMetaverseList + "    </tr>";
                         formattedMetaverseList = formattedMetaverseList + "</table>";
@@ -219,9 +219,9 @@
                         formattedMetaverseList = formattedMetaverseList + "    <tr valign='middle'>";
                         formattedMetaverseList = formattedMetaverseList + "        <td width='2%'></td>";
                         if (!metaverseList[m].fetch) {
-                            formattedMetaverseList = formattedMetaverseList + "        <td align='left' width='50%'><span style='padding: 0%; cursor: pointer;' onclick='fetchMetaverse(" + '"' + metaverseList[m].url + '"' + ")'><img src='icons/notfetched.png' width='40' height='16' draggable='false'></span></td>";
+                            formattedMetaverseList = formattedMetaverseList + "        <td align='left' width='50%'><span style='padding: 0%; cursor: pointer;' onclick='fetchMetaverse(" + m + ", true);'><img src='icons/notfetched.png' width='40' height='16' draggable='false'></span></td>";
                         } else {
-                            formattedMetaverseList = formattedMetaverseList + "        <td align='left' width='50%'><span style='padding: 0%; cursor: pointer;' onclick='unfetchMetaverse(" + '"' + metaverseList[m].url + '"' + ")'><img src='icons/fetched.png' width='40' height='16' draggable='false'></span><font class='metaverseRegion region-" + metaverseList[m].region.toUpperCase() + "'> LOADED</font></td>";                        
+                            formattedMetaverseList = formattedMetaverseList + "        <td align='left' width='50%'><span style='padding: 0%; cursor: pointer;' onclick='fetchMetaverse(" + m + ", false);'><img src='icons/fetched.png' width='40' height='16' draggable='false'></span><font class='metaverseRegion region-" + metaverseList[m].region.toUpperCase() + "'> LOADED</font></td>";                        
                         }                        
                         formattedMetaverseList = formattedMetaverseList + "        <td align='right' width='50%' ><font class='metaverseRegion region-" + metaverseList[m].region.toUpperCase() + "'>" + metaverseList[m].region.toUpperCase() + "</font></td>";
                         formattedMetaverseList = formattedMetaverseList + "    </tr>";
@@ -477,6 +477,30 @@
                     "action": "GO_FORWARD"
                     };
                 EventBridge.emitWebEvent(JSON.stringify(message));             
+            }
+
+            function pinMetaverse(metaverseIndex, pinned) {
+                var message = {
+                    "channel": channel,
+                    "action": "PIN_META"
+                    "mataverseIndex": metaverseIndex,
+                    "value": pinned
+                    };
+                EventBridge.emitWebEvent(JSON.stringify(message));
+                sleepFor(800);                
+                reload();                
+            }
+
+            function fetchMetaverse(metaverseIndex, fetch) {
+                var message = {
+                    "channel": channel,
+                    "action": "FETCH_META"
+                    "mataverseIndex": metaverseIndex,
+                    "value": fetch
+                    };
+                EventBridge.emitWebEvent(JSON.stringify(message));
+                sleepFor(800);                
+                reload();                
             }
             
             function filterLifeOnly() {
