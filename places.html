@@ -36,7 +36,7 @@
             
             var NUMBER_OF_RECORDS_PER_LOAD = 20;
             var loadRecordsUpTo = NUMBER_OF_RECORDS_PER_LOAD;
-            var currentListFormat = "EVENTS";
+            var currentListFormat = "PLACES";
         </script>
     </head>
     <body>
@@ -87,8 +87,9 @@
             </div>
             <div id='tabs'>
                 <button id='listFormatMetaverse' class='tabBtn' onclick='displayTab("METAVERSE");' >Metaverse</button>
-                <button id='listFormatEvents' class='tabBtn' onclick='displayTab("EVENTS");' disabled>Explore</button>
-                <button id='listFormatDomains' class='tabBtn' onclick='displayTab("DOMAINS");'>By Domains</button>
+                <button id='listFormatDomains' class='tabBtn' onclick='displayTab("DOMAINS");'>Domains</button>
+                <button id='listFormatPlaces' class='tabBtn' onclick='displayTab("PLACES");' disabled>Places</button>
+                
             </div>
         </div>
         <div id='list_content'><br>&nbsp;&nbsp;Loading...</div>
@@ -231,6 +232,8 @@
 
                         metaverseCounter++;
                     }
+                    
+                    document.getElementById("searchFiltersBar").style.display = "none";
                     
                     document.getElementById("list_content").innerHTML = formattedMetaverseList;
                     
@@ -629,16 +632,16 @@
             
             function displayTab(tab) {
                 currentListFormat = tab;
-                if (tab === "EVENTS") {
-                    document.getElementById("listFormatEvents").disabled = true;
+                if (tab === "PLACES") {
+                    document.getElementById("listFormatPlaces").disabled = true;
                     document.getElementById("listFormatDomains").disabled = false;
                     document.getElementById("listFormatMetaverse").disabled = false;
                 } else if (tab === "DOMAINS") {
-                    document.getElementById("listFormatEvents").disabled = false;
+                    document.getElementById("listFormatPlaces").disabled = false;
                     document.getElementById("listFormatDomains").disabled = true;
                     document.getElementById("listFormatMetaverse").disabled = false;
                 } else if (tab === "METAVERSE") {
-                    document.getElementById("listFormatEvents").disabled = false;
+                    document.getElementById("listFormatPlaces").disabled = false;
                     document.getElementById("listFormatDomains").disabled = false;
                     document.getElementById("listFormatMetaverse").disabled = true;
                 }
