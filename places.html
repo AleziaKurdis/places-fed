@@ -485,7 +485,7 @@
                 var message = {
                     "channel": channel,
                     "action": "PIN_META",
-                    "mataverseIndex": metaverseIndex,
+                    "metaverseIndex": metaverseIndex,
                     "value": pinned
                     };
                 EventBridge.emitWebEvent(JSON.stringify(message));
@@ -497,7 +497,7 @@
                 var message = {
                     "channel": channel,
                     "action": "FETCH_META",
-                    "mataverseIndex": metaverseIndex,
+                    "metaverseIndex": metaverseIndex,
                     "value": fetch
                     };
                 EventBridge.emitWebEvent(JSON.stringify(message));
