@@ -308,7 +308,7 @@
         var places = placesData.data.places;
         for (var i = 0;i < places.length; i++) {
 
-            var region, category, accessStatus, eventTypeDescription;
+            var region, category, accessStatus;
             
             var description = (places[i].description ? places[i].description : "");
             var thumbnail = (places[i].thumbnail ? places[i].thumbnail : "");
@@ -383,7 +383,7 @@
 
         for (var i = 0;i < places.length; i++) {
 
-            var category, accessStatus, eventTypeDescription;
+            var category, accessStatus;
             
             var description = "...";
             var thumbnail = "";
