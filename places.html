@@ -678,7 +678,7 @@
                         break;
                     }
                 }
-                alert("PLACE ID: " + placeId + " FOUND: " + JSON.stringify(placeDetail));
+
                 document.getElementById("placeDetail-image").src = "";
                 if (placeDetail.thumbnail === "") {
                     document.getElementById("placeDetail-image").src = "icons/placeholder.jpg";
@@ -693,7 +693,7 @@
                 if (placeDetail.category === "U") {  //TO REMOVE ONCE BEACONS GET REMOVED
                     placeUrl = placeDetail.address;
                 } else if (placeDetail.metaverseRegion !== "local") {
-                    placeUrl = "hifi://" + placeRecords[i].address;
+                    placeUrl = "hifi://" + placeDetail.address;
                 }                
                 document.getElementById("placeDetail-visitBtn-container").innerHTML = "<button id='placeDetail-visitBtn' onclick='teleport(" + '"' + placeDetail.id + '"' + ", " + '"' + placeUrl + '"' + "); return false;'>Visit</button>";
                 document.getElementById("placeDetail-maturity").innerHTML = placeDetail.maturity.toUpperCase();
