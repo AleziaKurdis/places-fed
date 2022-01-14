@@ -862,7 +862,7 @@ td.warningTitle {
     color: #00e2ff;
 }
 
-.filterLocalOff {
+.filterRegionOff {
   background: #333333;
   color: #888888;
   font-size: 10px;
@@ -871,7 +871,7 @@ td.warningTitle {
   text-decoration: none;
 }
 
-button.filterLocalOff:hover {
+button.filterRegionOff:hover {
     border: solid #888888 1px;
 }
 
@@ -886,4 +886,30 @@ button.filterLocalOff:hover {
 
 button.localFilterOn:hover {
     border: solid #ffbc00 1px;
+}
+
+.federationFilterOn {
+  background: #00ad3c;
+  color: #00ff58;
+  font-size: 10px;
+  padding: 1px 2px 1px 2px;
+  border: solid #000000 1px;
+  text-decoration: none;  
+}
+
+button.federationFilterOn:hover {
+    border: solid #00ff58 1px;
+}
+
+.externalFilterOn {
+  background: #009aad;
+  color: #00e2ff;
+  font-size: 10px;
+  padding: 1px 2px 1px 2px;
+  border: solid #000000 1px;
+  text-decoration: none;  
+}
+
+button.externalFilterOn:hover {
+    border: solid #00e2ff 1px;
 }

@@ -31,7 +31,11 @@
             var metaverseList = [];
 
             var lifeOnlyFilter = false;
-            var localOnlyFilter = false;
+            
+            var localFilter = true;
+            var federationFilter = true;
+            var externalFilter = true; 
+            
             var maturityFilter = ["adult", "mature", "teen", "everyone", "unrated"];
             var seachedFieldsFilter = ["name", "description", "owners", "tags"];
             
@@ -78,9 +82,11 @@
                 <button title="Tags" class='fieldsSearchFilterOn' id='searchFilterTags' onClick = 'filterSearchFeild("tags");'>TAGS</button>
                 &nbsp;&nbsp;&nbsp;
                 </div>
-                <button class='filterLocalOff' id='localPlacesFilter' onClick = 'filterLocalOnly();'>LOCAL</button>
+                <button class='localFilterOn' id='localPlacesFilter' onClick = 'filterRegion("local");'>LOC</button>
+                <button class='federationFilterOn' id='fedPlacesFilter' onClick = 'filterRegion("federation");'>FED</button>
+                <button class='externalFilterOn' id='extPlacesFilter' onClick = 'filterRegion("external");'>EXT</button>
                 &nbsp;&nbsp;&nbsp;               
-                <button class='filterLifeOff' id='presenceOfLife' onClick = 'filterLifeOnly();'>ONLINE USERS</button>
+                <button class='filterLifeOff' id='presenceOfLife' onClick = 'filterLifeOnly();'>USERS</button>
                 &nbsp;&nbsp;&nbsp;
                 <button title="Adult" class='adultFilterOn' id='maturityAdult' onClick = 'filterMaturity("adult");'>A</button>
                 <button title="Mature" class='matureFilterOn' id='maturityMature' onClick = 'filterMaturity("mature");'>M</button>
@@ -89,7 +95,7 @@
                 <button title="Unrated" class='unratedFilterOn' id='maturityUnrated' onClick = 'filterMaturity("unrated");'>U</button>
             </div>
             <div id='tabs'>
-                <button id='listFormatMetaverse' class='tabBtn' onclick='displayTab("METAVERSE");' >Metaverse</button>
+                <button id='listFormatMetaverse' class='tabBtn' onclick='displayTab("REGIONS");' >Regions</button>
                 <button id='listFormatDomains' class='tabBtn' onclick='displayTab("DOMAINS");'>Domains</button>
                 <button id='listFormatPlaces' class='tabBtn' onclick='displayTab("PLACES");' disabled>Places</button>
                 
@@ -121,7 +127,7 @@
                                 <br><br>
                                 <div id="placeDetail-capacity"></div>
                                 <br><br>
-                                METAVERSE:
+                                REGION:
                                 <div id="placeDetail-metaverse"></div>
                                 <div id="placeDetail-region"></div>
                             </div>
@@ -187,7 +193,7 @@
             }
 
             function generateContent() {
-                if (currentListFormat === "METAVERSE") {
+                if (currentListFormat === "REGIONS") {
                     //Display metaverse page here
                     
                     var formattedMetaverseList = "";
@@ -237,6 +243,7 @@
                         formattedMetaverseList = formattedMetaverseList + "</div></div>";
 
                         metaverseCounter++;
+                        
                     }
                     
                     document.getElementById("searchFiltersBar").style.display = "none";
@@ -362,7 +369,9 @@
                         var lowerCasePlaceDescription = placeRecords[i].description.toLowerCase();
                         var lowerCasePlaceManagers = placeRecords[i].managers.toLowerCase();
                         var lowerCasePlaceTags = placeRecords[i].tags.toLowerCase();
-                        if ((localOnlyFilter && placeRecords[i].metaverseRegion === "local") || !localOnlyFilter) {
+                        if ((localFilter && placeRecords[i].metaverseRegion === "local") || 
+                            (federationFilter && placeRecords[i].metaverseRegion === "federation") || 
+                            (externalFilter && placeRecords[i].metaverseRegion === "external")) {
                             if ((lifeOnlyFilter && placeRecords[i].accessStatus !== "NOBODY") || !lifeOnlyFilter) { 
                                 if ( maturityFilter.indexOf(placeRecords[i].maturity) !== -1){
                                     if ((lowerCasePlaceName.indexOf(searchedText.toLowerCase()) !== -1 && seachedFieldsFilter.indexOf("name") !== -1) ||
@@ -528,14 +537,35 @@
                 generateContent();
             }
 
-            function filterLocalOnly() {
-                if (localOnlyFilter) {
-                    localOnlyFilter = false;
-                    document.getElementById("localPlacesFilter").className = "filterLocalOff";
-                } else {
-                    localOnlyFilter = true;
-                    document.getElementById("localPlacesFilter").className = "localFilterOn";
+            function filterRegion(region) {
+                if (region === "local") {
+                    if (localFilter) {
+                        localFilter = false;
+                        document.getElementById("localPlacesFilter").className = "filterRegionOff";
+                    } else {
+                        localFilter = true;
+                        document.getElementById("localPlacesFilter").className = "localFilterOn";
+                    }                
                 }
+                if (region === "federation") {
+                    if (federationFilter) {
+                        federationFilter = false;
+                        document.getElementById("fedPlacesFilter").className = "filterRegionOff";
+                    } else {
+                        federationFilter = true;
+                        document.getElementById("fedPlacesFilter").className = "federationFilterOn";
+                    }                
+                }
+                if (region === "external") {
+                    if (externalFilter) {
+                        externalFilter = false;
+                        document.getElementById("extPlacesFilter").className = "filterRegionOff";
+                    } else {
+                        externalFilter = true;
+                        document.getElementById("extPlacesFilter").className = "externalFilterOn";
+                    }                
+                }                
+
                 loadRecordsUpTo = NUMBER_OF_RECORDS_PER_LOAD;
                 generateContent();
             }
@@ -660,7 +690,7 @@
                     document.getElementById("listFormatPlaces").disabled = false;
                     document.getElementById("listFormatDomains").disabled = true;
                     document.getElementById("listFormatMetaverse").disabled = false;
-                } else if (tab === "METAVERSE") {
+                } else if (tab === "REGIONS") {
                     document.getElementById("listFormatPlaces").disabled = false;
                     document.getElementById("listFormatDomains").disabled = false;
                     document.getElementById("listFormatMetaverse").disabled = true;
