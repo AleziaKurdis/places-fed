@@ -24,12 +24,12 @@ _(It has been very useful for in early time. Thank you)_
 
 ### Place API data extraction...
 The extraction of the Place API data is done from the .js side, rather than the UI layer (.html).
-Doing this, allows to exclude the places that are not compatible with the protocol version use by Vircadia's Interface. 
+Doing this, allows to exclude the places that are not compatible with the protocol version use by Overte's Interface. 
 (It is not filtered out in the "Explore" app.)
 It also keeps the logic separated from the UI layer, which can be useful to anyone who want to simply redesign the UI.
 
 But that's for this prototype. In the future, the "Explore" app. is appealed to be redesign a couple of time again, 
-when the number of places will become too high and certainaly another time when Vircadia will get decentralized.
+when the number of places will become too high and certainaly another time when Overte will get decentralized.
 The data processing will need at some point to happen in the API it-self to really scale.
 So the "how to do it" will changed, but the "what it needs to do" might stay valid. _(A good reason to start to define now the "what it needs to do")_
 
