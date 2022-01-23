@@ -8,7 +8,7 @@ For that reason, it’s more efficient and faster to try it apart before.
 So here’s the experimental application (I named it "Places" to avoid any confusion with the built-in « Explore » app.)
 
 Here's the url of the script to run the application : https://aleziakurdis.github.io/places-fed/places.js  
-(To install in ??? interface: Edit > Running Scripts... Load scripts from url)    
+(To install in "Overte" interface: Edit > Running Scripts... Load scripts from url)    
 
 
 Next, you will find the list of the different features or changes that have been put in this prototype and the reasons why they have been designed like this:
